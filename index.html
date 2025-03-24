@@ -9,9 +9,11 @@
     <title>Happy Birthday Sami!</title>
     <style>
         body {
-            background: linear-gradient(to right, #2c3e50, #34495e);
+            background-image: url('https://www.micula.eu/wp-content/uploads/2023/06/wallpaper-site-Avocat-Samuel-Micula-scaled.webp');
+            background-size: cover;
+            background-position: center;
             color: #ecf0f1;
-            font-family: 'Arial', sans-serif;
+            font-family: "Poppins", sans-serif;
             text-align: center;
             margin: 0;
             padding: 0;
@@ -22,35 +24,52 @@
             flex-direction: column;
             overflow: hidden;
             position: relative;
-            font-family: "Poppins", sans-serif;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+        .content-container {
+            position: relative;
+            z-index: 1;
         }
         h1 {
-            font-size: 2.5em;
-            animation: fadeIn 2s ease-in-out;
+            font-size: 3em;
+            font-family: "Urbanist", sans-serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: .15em solid orange;
+            animation: typing 3s steps(30, end), blink-caret .75s step-end infinite;
         }
         p {
             font-size: 1.5em;
             margin: 20px;
-            animation: slideIn 2s ease-in-out;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            animation: fadeInSlide 2s ease-in-out forwards;
         }
-        .play-button {
-            background: #27ae60;
+        .website-link, .play-button {
+            background: linear-gradient(to bottom, #3498db, #2980b9);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 15px 30px;
             font-size: 1.2em;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 8px;
             margin-top: 20px;
-            animation: fadeIn 3s ease-in-out;
+            text-decoration: none;
+            transition: transform 0.2s ease-in-out, box-shadow 0.3s ease;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes slideIn {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .website-link:hover, .play-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         canvas {
             position: fixed;
@@ -59,23 +78,53 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
+            z-index: 2;
+        }
+      
+      .play-button {
+        display: none;
+      }
+        #musicPlayer {
+            position: absolute;
+            left: -9999px;
+            display: none;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: orange; }
+        }
+        @keyframes fadeInSlide {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
-    <h1>🎉 La mulți ani, Sami! 🎉</h1>
-    <p>Your honor, today the court finds you guilty... of being another year wiser! 🎂🎈</p>
-    <p>Domnul sa te binecuvânteze cu înțelepciune și sănătate, iar mâna Lui cea puternică și ocrotitoare sa fie cu tine mereu!</p>
-    <button class="play-button" onclick="playMusic()">🎵 Play Music</button>
+    <div class="content-container">
+        <h1>🎉 La mulți ani, Sami! 🎉</h1>
+        <p>Your honor, today the court finds you guilty... of being another year wiser! 🎂🎈</p>
+        <p>Domnul sa te binecuvânteze cu înțelepciune și sănătate, iar mâna Lui cea puternică și ocrotitoare sa fie cu tine mereu!</p>
+        <a href="https://www.micula.eu/" class="website-link" target="_blank">Avocat nr 1</a>
+        <button class="play-button" onclick="playMusic()">🎵 Play Music</button>
+    </div>
     
-    <!-- Embedded YouTube Player -->
-    <iframe id="musicPlayer" width="0" height="0" src="https://www.youtube.com/embed/i4kbQV58IHM?autoplay=1&loop=1&playlist=i4kbQV58IHM" frameborder="0" allow="autoplay"></iframe>
+    <iframe id="musicPlayer" width="0" height="0" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allow="autoplay"></iframe>
     
     <canvas id="fireworksCanvas"></canvas>
     
     <script>
         function playMusic() {
-            document.getElementById('musicPlayer').src = "https://www.youtube.com/embed/i4kbQV58IHM?autoplay=1&loop=1&playlist=i4kbQV58IHM";
+            let player = document.getElementById('musicPlayer');
+            if (player.style.display === "none"){
+                player.style.display = "block";
+            }
+            else{
+                player.style.display = "none";
+            }
         }
         
         // Fireworks Effect
@@ -93,15 +142,22 @@
             this.life = 100;
             this.dx = (Math.random() - 0.5) * 4;
             this.dy = Math.random() * -3 - 1;
+            this.gravity = 0.05;
+            this.alpha = 1;
         }
         
         function createFirework() {
             const x = Math.random() * canvas.width;
-            const y = canvas.height;
+            const y = Math.random() * canvas.height;
             const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
             for (let i = 0; i < 30; i++) {
                 particles.push(new Particle(x, y, color, Math.random() * 3));
             }
+            setTimeout(() => {
+                for (let i = 0; i < 50; i++) {
+                    particles.push(new Particle(x, y, color, Math.random() * 5));
+                }
+            }, 200);
         }
         
         function updateParticles() {
@@ -110,21 +166,9 @@
                 let p = particles[i];
                 p.x += p.dx;
                 p.y += p.dy;
+                p.dy += p.gravity;
                 p.life--;
-                ctx.fillStyle = p.color;
+                p.alpha = p.life / 100;
+                ctx.fillStyle = `rgba(${parseInt(p.color.slice(4,7))}, ${parseInt(p.color.slice(9,12))}, ${parseInt(p.color.slice(14,17))}, ${p.alpha})`;
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-                ctx.fill();
-                if (p.life <= 0) particles.splice(i, 1);
-            }
-        }
-        
-        function animateFireworks() {
-            updateParticles();
-            requestAnimationFrame(animateFireworks);
-        }
-        setInterval(createFirework, 500);
-        animateFireworks();
-    </script>
-</body>
-</html>
+                ctx.arc(p
