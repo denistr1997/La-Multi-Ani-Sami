@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Happy Birthday Sami!</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #2c3e50, #34495e);
+            color: #ecf0f1;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            font-family: "Poppins", sans-serif;
+        }
+        h1 {
+            font-size: 2.5em;
+            animation: fadeIn 2s ease-in-out;
+        }
+        p {
+            font-size: 1.5em;
+            margin: 20px;
+            animation: slideIn 2s ease-in-out;
+        }
+        .play-button {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            animation: fadeIn 3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎉 La mulți ani, Sami! 🎉</h1>
+    <p>Your honor, today the court finds you guilty... of being another year wiser! 🎂🎈</p>
+    <p>Domnul sa te binecuvânteze cu înțelepciune și sănătate, iar mâna Lui cea puternică și ocrotitoare sa fie cu tine mereu!</p>
+    <button class="play-button" onclick="playMusic()">🎵 Play Music</button>
+    
+    <!-- Embedded YouTube Player -->
+    <iframe id="musicPlayer" width="0" height="0" src="https://www.youtube.com/embed/i4kbQV58IHM?autoplay=1&loop=1&playlist=i4kbQV58IHM" frameborder="0" allow="autoplay"></iframe>
+    
+    <canvas id="fireworksCanvas"></canvas>
+    
+    <script>
+        function playMusic() {
+            document.getElementById('musicPlayer').src = "https://www.youtube.com/embed/i4kbQV58IHM?autoplay=1&loop=1&playlist=i4kbQV58IHM";
+        }
+        
+        // Fireworks Effect
+        const canvas = document.getElementById("fireworksCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let particles = [];
+        function Particle(x, y, color, speed) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            this.speed = speed;
+            this.life = 100;
+            this.dx = (Math.random() - 0.5) * 4;
+            this.dy = Math.random() * -3 - 1;
+        }
+        
+        function createFirework() {
+            const x = Math.random() * canvas.width;
+            const y = canvas.height;
+            const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+            for (let i = 0; i < 30; i++) {
+                particles.push(new Particle(x, y, color, Math.random() * 3));
+            }
+        }
+        
+        function updateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                p.x += p.dx;
+                p.y += p.dy;
+                p.life--;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+        }
+        
+        function animateFireworks() {
+            updateParticles();
+            requestAnimationFrame(animateFireworks);
+        }
+        setInterval(createFirework, 500);
+        animateFireworks();
+    </script>
+</body>
+</html>
